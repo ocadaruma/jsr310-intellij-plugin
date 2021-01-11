@@ -1,0 +1,34 @@
+<idea-plugin>
+    <id>com.mayreh.jsr310-intellij-plugin</id>
+    <name>JSR-310 Support</name>
+    <vendor email="ocadaruma@gmail.com" url="https//github.com/ocadaruma">Haruki Okada</vendor>
+
+    <description><![CDATA[
+    Plugin that adds supports for JSR-310 (Date and Time API).<br>
+    <em>Features:</em>
+    <ul>
+    <li>Validate DateTimeFormatter pattern literal.</li>
+    <li>Parse text as date-time classes using specified pattern literal on-the-fly.</li>
+    </ul>
+    ]]></description>
+
+    <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+    <depends>org.intellij.intelliLang</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <intentionAction>
+            <className>com.mayreh.intellij.plugin.jsr310.CheckDateTimePatternIntentionAction</className>
+            <category>JSR310</category>
+        </intentionAction>
+        <!--        <referenceInjector implementation="com.mayreh.intellij.plugin.jsr310.ThreetenPatternInjector"/>-->
+        <lang.parserDefinition language="JSR310Pattern" implementationClass="com.mayreh.intellij.plugin.jsr310.ThreetenPatternParserDefinition"/>
+        <annotator language="JSR310Pattern" implementationClass="com.mayreh.intellij.plugin.jsr310.ThreetenPatternAnnotator"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="org.intellij.intelliLang">
+        <injectionConfig config="META-INF/threetenInjection.xml" />
+    </extensions>
+</idea-plugin>
