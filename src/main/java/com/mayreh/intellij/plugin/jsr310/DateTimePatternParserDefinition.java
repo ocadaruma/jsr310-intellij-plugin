@@ -19,18 +19,18 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 
-public class ThreetenPatternParserDefinition implements ParserDefinition {
-    public static final IElementType ENTIRE_TEXT = new IElementType("PATTERN_TEXT", ThreetenPattern.INSTANCE);
-    public static final IFileElementType FILE = new IFileElementType(ThreetenPattern.INSTANCE);
+public class DateTimePatternParserDefinition implements ParserDefinition {
+    public static final IElementType ENTIRE_TEXT = new IElementType("PATTERN_TEXT", DateTimePattern.INSTANCE);
+    public static final IFileElementType FILE = new IFileElementType(DateTimePattern.INSTANCE);
 
     @Override
     public @NotNull Lexer createLexer(Project project) {
-        return new ThreetenPatternLexer();
+        return new DateTimePatternLexer();
     }
 
     @Override
     public PsiParser createParser(Project project) {
-        return new ThreetenPatternParser();
+        return new DateTimePatternParser();
     }
 
     @Override
@@ -55,15 +55,15 @@ public class ThreetenPatternParserDefinition implements ParserDefinition {
 
     @Override
     public @NotNull PsiElement createElement(ASTNode node) {
-        return new ThreetenPatternElement(node);
+        return new DateTimePatternElement(node);
     }
 
     @Override
     public PsiFile createFile(FileViewProvider viewProvider) {
-        return new ThreetenPatternFile(viewProvider);
+        return new DateTimePatternFile(viewProvider);
     }
 
-    static class ThreetenPatternLexer extends LexerBase {
+    static class DateTimePatternLexer extends LexerBase {
         private int start;
         private int end;
         private CharSequence buffer;
@@ -111,7 +111,7 @@ public class ThreetenPatternParserDefinition implements ParserDefinition {
         }
     }
 
-    static class ThreetenPatternParser implements PsiParser {
+    static class DateTimePatternParser implements PsiParser {
         @Override
         public @NotNull ASTNode parse(@NotNull IElementType root,
                                       @NotNull PsiBuilder builder) {
@@ -122,8 +122,8 @@ public class ThreetenPatternParserDefinition implements ParserDefinition {
         }
     }
 
-    static class ThreetenPatternElement extends ASTWrapperPsiElement {
-        ThreetenPatternElement(@NotNull ASTNode node) {
+    static class DateTimePatternElement extends ASTWrapperPsiElement {
+        DateTimePatternElement(@NotNull ASTNode node) {
             super(node);
         }
     }

@@ -40,17 +40,17 @@ public class CheckDateTimePatternIntentionAction extends QuickEditAction impleme
         }
         Pair<PsiElement, TextRange> rangePair = getRangePair(file, editor);
         if (rangePair != null && rangePair.first != null) {
-            return rangePair.first.getLanguage().isKindOf(ThreetenPattern.INSTANCE);
+            return rangePair.first.getLanguage().isKindOf(DateTimePattern.INSTANCE);
         }
         PsiFile baseFile = InjectedLanguageManager.getInstance(project).getTopLevelFile(file);
-        return baseFile != null && baseFile.getLanguage().isKindOf(ThreetenPattern.INSTANCE);
+        return baseFile != null && baseFile.getLanguage().isKindOf(DateTimePattern.INSTANCE);
     }
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file)
             throws IncorrectOperationException {
         PsiFile baseFile = InjectedLanguageManager.getInstance(project).getTopLevelFile(file);
-        if (baseFile == null || !baseFile.getLanguage().isKindOf(ThreetenPattern.INSTANCE)) {
+        if (baseFile == null || !baseFile.getLanguage().isKindOf(DateTimePattern.INSTANCE)) {
             super.invoke(project, editor, file);
             return;
         }
@@ -78,6 +78,6 @@ public class CheckDateTimePatternIntentionAction extends QuickEditAction impleme
     @Override
     public Icon getIcon(int flags) {
         //noinspection ConstantConditions
-        return ThreetenPattern.INSTANCE.getAssociatedFileType().getIcon();
+        return DateTimePattern.INSTANCE.getAssociatedFileType().getIcon();
     }
 }

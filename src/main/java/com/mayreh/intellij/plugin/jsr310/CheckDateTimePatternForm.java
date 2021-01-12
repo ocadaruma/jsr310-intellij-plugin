@@ -2,6 +2,11 @@ package com.mayreh.intellij.plugin.jsr310;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -23,10 +28,12 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.components.JBLabel;
+import com.intellij.ui.components.JBTextArea;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -47,7 +54,7 @@ public class CheckDateTimePatternForm {
     private final ComboBox<DateTimeClazz> dateTimeClazz;
     private final EditorTextField sampleText;
     private final EditorTextField pattern;
-    private final JBLabel result;
+    private final JBTextArea result;
 
     private final JPanel rootPanel;
 
@@ -72,7 +79,7 @@ public class CheckDateTimePatternForm {
         };
         sampleText.setOneLineMode(false);
 
-        pattern = new EditorTextField(document, project, ThreetenPatternFileType.INSTANCE) {
+        pattern = new EditorTextField(document, project, DateTimePatternFileType.INSTANCE) {
             @Override
             protected EditorEx createEditor() {
                 EditorEx editor = super.createEditor();
@@ -89,7 +96,9 @@ public class CheckDateTimePatternForm {
         };
         pattern.setOneLineMode(false);
 
-        result = new JBLabel();
+        result = new JBTextArea();
+        result.setOpaque(false);
+        result.setEditable(false);
 
         int preferredWidth = Math.max(JBUIScale.scale(250), sampleText.getPreferredSize().width);
         sampleText.setPreferredWidth(preferredWidth);
@@ -117,6 +126,7 @@ public class CheckDateTimePatternForm {
                 };
                 sampleText.addDocumentListener(documentListener);
                 pattern.addDocumentListener(documentListener);
+                dateTimeClazz.addItemListener(e -> update());
 
                 update();
             }
@@ -132,7 +142,36 @@ public class CheckDateTimePatternForm {
             }
 
             private void update() {
-                result.setText(sampleText.getText());
+                if (StringUtil.isNotEmpty(sampleText.getText()) &&
+                    StringUtil.isNotEmpty(pattern.getText())) {
+                    try {
+                        DateTimeFormatter parsedPattern = DateTimeFormatter.ofPattern(pattern.getText());
+                        String resultText = null;
+                        try {
+                            String text = sampleText.getText();
+                            DateTimeClazz selectedClazz = (DateTimeClazz) dateTimeClazz.getSelectedItem();
+                            switch (selectedClazz) {
+                                case LocalDate:
+                                    resultText = LocalDate.parse(text, parsedPattern).toString();
+                                    break;
+                                case LocalDateTime:
+                                    resultText = LocalDateTime.parse(text, parsedPattern).toString();
+                                    break;
+                                case ZonedDateTime:
+                                    resultText = ZonedDateTime.parse(text, parsedPattern).toString();
+                                    break;
+                            }
+                        } catch (DateTimeParseException e) {
+                            resultText = e.getMessage();
+                        }
+                        if (resultText != null) {
+                            result.setText(resultText);
+                        }
+                    } catch (IllegalArgumentException e) {
+                        // ignore parse failure of the pattern since
+                        // it should be notified through annotator
+                    }
+                }
                 rootPanel.revalidate();
                 Balloon balloon = JBPopupFactory.getInstance().getParentBalloonFor(rootPanel);
                 if (balloon != null && !balloon.isDisposed()) {

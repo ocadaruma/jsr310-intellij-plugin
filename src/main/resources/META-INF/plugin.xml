@@ -21,14 +21,13 @@
     <extensions defaultExtensionNs="com.intellij">
         <intentionAction>
             <className>com.mayreh.intellij.plugin.jsr310.CheckDateTimePatternIntentionAction</className>
-            <category>JSR310</category>
+            <category>JSR-310</category>
         </intentionAction>
-        <!--        <referenceInjector implementation="com.mayreh.intellij.plugin.jsr310.ThreetenPatternInjector"/>-->
-        <lang.parserDefinition language="JSR310Pattern" implementationClass="com.mayreh.intellij.plugin.jsr310.ThreetenPatternParserDefinition"/>
-        <annotator language="JSR310Pattern" implementationClass="com.mayreh.intellij.plugin.jsr310.ThreetenPatternAnnotator"/>
+        <lang.parserDefinition language="JSR-310 DateTimePattern" implementationClass="com.mayreh.intellij.plugin.jsr310.DateTimePatternParserDefinition"/>
+        <annotator language="JSR-310 DateTimePattern" implementationClass="com.mayreh.intellij.plugin.jsr310.DateTimePatternAnnotator"/>
     </extensions>
 
     <extensions defaultExtensionNs="org.intellij.intelliLang">
-        <injectionConfig config="META-INF/threetenInjection.xml" />
+        <injectionConfig config="META-INF/jsr310Injection.xml" />
     </extensions>
 </idea-plugin>

@@ -9,7 +9,7 @@ import com.intellij.lang.annotation.Annotator;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.psi.PsiElement;
 
-public class ThreetenPatternAnnotator implements Annotator {
+public class DateTimePatternAnnotator implements Annotator {
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
         try {

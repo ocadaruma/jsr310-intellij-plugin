@@ -6,13 +6,13 @@ import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
 
-public class ThreetenPatternFile extends PsiFileBase {
-    public ThreetenPatternFile(@NotNull FileViewProvider viewProvider) {
-        super(viewProvider, ThreetenPattern.INSTANCE);
+public class DateTimePatternFile extends PsiFileBase {
+    public DateTimePatternFile(@NotNull FileViewProvider viewProvider) {
+        super(viewProvider, DateTimePattern.INSTANCE);
     }
 
     @Override
     public @NotNull FileType getFileType() {
-        return ThreetenPatternFileType.INSTANCE;
+        return DateTimePatternFileType.INSTANCE;
     }
 }

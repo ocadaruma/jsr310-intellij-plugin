@@ -9,21 +9,21 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 
-public final class ThreetenPatternFileType extends LanguageFileType {
-    public static final ThreetenPatternFileType INSTANCE = new ThreetenPatternFileType();
+public final class DateTimePatternFileType extends LanguageFileType {
+    public static final DateTimePatternFileType INSTANCE = new DateTimePatternFileType();
 
-    private ThreetenPatternFileType() {
-        super(ThreetenPattern.INSTANCE);
+    private DateTimePatternFileType() {
+        super(DateTimePattern.INSTANCE);
     }
 
     @Override
     public @NotNull String getName() {
-        return "JSR310Pattern";
+        return "JSR-310 DateTimePattern";
     }
 
     @Override
     public @NotNull @Nls(capitalization = Capitalization.Sentence) String getDescription() {
-        return "JSR310Pattern";
+        return getName();
     }
 
     @Override

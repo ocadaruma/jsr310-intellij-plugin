@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="LanguageInjectionConfiguration">
-  <injection language="JSR310Pattern" injector-id="java">
+  <injection language="JSR-310 DateTimePattern" injector-id="java">
     <display-name>JSR-310 DateTimeFormatter pattern</display-name>
     <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("ofPattern").withParameters("java.lang.String").definedInClass("java.time.format.DateTimeFormatter"))]]></place>
     <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("ofPattern").withParameters("java.lang.String", "java.util.Locale").definedInClass("java.time.format.DateTimeFormatter"))]]></place>

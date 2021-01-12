@@ -4,11 +4,11 @@ import com.intellij.lang.InjectableLanguage;
 import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 
-public final class ThreetenPattern extends Language implements InjectableLanguage {
-    public static final ThreetenPattern INSTANCE = new ThreetenPattern();
+public final class DateTimePattern extends Language implements InjectableLanguage {
+    public static final DateTimePattern INSTANCE = new DateTimePattern();
 
-    private ThreetenPattern() {
-        super("JSR310Pattern");
+    private DateTimePattern() {
+        super("JSR-310 DateTimePattern");
     }
 
     @Override
@@ -18,6 +18,6 @@ public final class ThreetenPattern extends Language implements InjectableLanguag
 
     @Override
     public LanguageFileType getAssociatedFileType() {
-        return ThreetenPatternFileType.INSTANCE;
+        return DateTimePatternFileType.INSTANCE;
     }
 }
