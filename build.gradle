@@ -15,7 +15,6 @@ apply plugin: "org.jetbrains.intellij"
 
 group = "com.mayreh.intellij.plugins"
 version = "${version}" + (snapshot.toBoolean() ? "-SNAPSHOT" : "")
-sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
@@ -33,9 +32,6 @@ intellij {
 
 patchPluginXml {
     version = project.version
-    changeNotes """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
 }
 
 test {
