@@ -5,8 +5,8 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nls.Capitalization;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 
 public final class ThreetenPatternFileType extends LanguageFileType {
@@ -32,7 +32,7 @@ public final class ThreetenPatternFileType extends LanguageFileType {
     }
 
     @Override
-    public @Nullable Icon getIcon() {
-        return null;
+    public Icon getIcon() {
+        return AllIcons.FileTypes.Any_type;
     }
 }

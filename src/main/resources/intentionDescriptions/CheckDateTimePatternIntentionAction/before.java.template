@@ -1,0 +1,3 @@
+public class RegExp {
+  DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("<spot>YYYY-MM-DD</spot>");
+}
