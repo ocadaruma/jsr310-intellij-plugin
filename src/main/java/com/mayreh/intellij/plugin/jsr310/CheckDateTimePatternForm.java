@@ -9,8 +9,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.ScrollPaneConstants;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -32,7 +34,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.EditorTextField;
+import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBLabel;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTextArea;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ui.JBUI;
@@ -55,7 +59,6 @@ public class CheckDateTimePatternForm {
     private final EditorTextField sampleText;
     private final EditorTextField pattern;
     private final JBTextArea result;
-
     private final JPanel rootPanel;
 
     public CheckDateTimePatternForm(@NotNull PsiFile file,
@@ -96,20 +99,19 @@ public class CheckDateTimePatternForm {
         };
         pattern.setOneLineMode(false);
 
-        result = new JBTextArea();
+        result = new JBTextArea(2, 40);
+        result.setLineWrap(true);
+        result.setWrapStyleWord(true);
         result.setOpaque(false);
         result.setEditable(false);
+        result.setBorder(JBUI.Borders.empty(UIUtil.DEFAULT_VGAP / 2, UIUtil.DEFAULT_HGAP / 2));
 
-        int preferredWidth = Math.max(JBUIScale.scale(250), sampleText.getPreferredSize().width);
-        sampleText.setPreferredWidth(preferredWidth);
-        pattern.setPreferredWidth(preferredWidth);
-
-        rootPanel = new JPanel(new GridBagLayout()) {
+        rootPanel = new JPanel() {
             @Override
             public void addNotify() {
                 super.addNotify();
 
-                IdeFocusManager.getGlobalInstance().requestFocus(sampleText, true);
+                IdeFocusManager.getGlobalInstance().requestFocus(dateTimeClazz, true);
 
                 registerFocusShortcut(dateTimeClazz, "shift TAB", pattern.getFocusTarget());
                 registerFocusShortcut(dateTimeClazz, "TAB", sampleText.getFocusTarget());
@@ -142,14 +144,15 @@ public class CheckDateTimePatternForm {
             }
 
             private void update() {
-                if (StringUtil.isNotEmpty(sampleText.getText()) &&
-                    StringUtil.isNotEmpty(pattern.getText())) {
+                if (StringUtil.isEmpty(sampleText.getText())) {
+                    setResult("");
+                } else if (StringUtil.isNotEmpty(pattern.getText())) {
                     try {
                         DateTimeFormatter parsedPattern = DateTimeFormatter.ofPattern(pattern.getText());
-                        String resultText = null;
                         try {
                             String text = sampleText.getText();
                             DateTimeClazz selectedClazz = (DateTimeClazz) dateTimeClazz.getSelectedItem();
+                            String resultText = null;
                             switch (selectedClazz) {
                                 case LocalDate:
                                     resultText = LocalDate.parse(text, parsedPattern).toString();
@@ -161,15 +164,14 @@ public class CheckDateTimePatternForm {
                                     resultText = ZonedDateTime.parse(text, parsedPattern).toString();
                                     break;
                             }
+                            if (resultText != null) {
+                                setResult(resultText);
+                            }
                         } catch (DateTimeParseException e) {
-                            resultText = e.getMessage();
-                        }
-                        if (resultText != null) {
-                            result.setText(resultText);
+                            setErrorResult(e.getMessage());
                         }
                     } catch (IllegalArgumentException e) {
-                        // ignore parse failure of the pattern since
-                        // it should be notified through annotator
+                        setResult("");
                     }
                 }
                 rootPanel.revalidate();
@@ -178,53 +180,72 @@ public class CheckDateTimePatternForm {
                     balloon.revalidate();
                 }
             }
+
+            private void setErrorResult(String text) {
+                result.setForeground(SimpleTextAttributes.ERROR_ATTRIBUTES.getFgColor());
+                result.setText(text);
+                result.setCaretPosition(0);
+            }
+
+            private void setResult(String text) {
+                result.setForeground(SimpleTextAttributes.REGULAR_ATTRIBUTES.getFgColor());
+                result.setText(text);
+                result.setCaretPosition(0);
+            }
         };
         rootPanel.setBorder(JBUI.Borders.empty(UIUtil.DEFAULT_VGAP, UIUtil.DEFAULT_HGAP));
 
+        int preferredWidth = Math.max(JBUIScale.scale(250), sampleText.getPreferredSize().width);
+        sampleText.setPreferredWidth(preferredWidth);
+        pattern.setPreferredWidth(preferredWidth);
+
         JPanel clazzSelectPanel = new JPanel(new GridBagLayout());
-        new LayoutBuilder(clazzSelectPanel)
+        new GridBagBuilder(clazzSelectPanel)
                 .add(0, 0, dateTimeClazz)
                 .add(1, 0, new JBLabel(".parse"));
 
         JPanel inputsPanel = new JPanel(new GridBagLayout());
-        new LayoutBuilder(inputsPanel)
-                .add(0, 0, new JBLabel("   Text :"))
+        new GridBagBuilder(inputsPanel)
+                .add(0, 0, new JBLabel("   Text :"), GridBagConstraints.LINE_END)
                 .add(1, 0, sampleText)
-                .add(0, 1, new JBLabel("Pattern :"))
+                .add(0, 1, new JBLabel("Pattern :"), GridBagConstraints.LINE_END)
                 .add(1, 1, pattern);
 
-        JPanel resultPanel = new JPanel(new GridBagLayout());
-        resultPanel.setBorder(BorderFactory.createTitledBorder("Result"));
-        new LayoutBuilder(resultPanel)
-                .add(0, 0, result);
+        JBScrollPane resultPane = new JBScrollPane(
+                result,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        resultPane.getViewport().setOpaque(false);
+        resultPane.setOpaque(false);
+        resultPane.setBorder(BorderFactory.createTitledBorder("Result"));
 
-        new LayoutBuilder(rootPanel)
-                .add(0, 0, clazzSelectPanel)
-                .add(0, 1, inputsPanel)
-                .add(0, 2, resultPanel, GridBagConstraints.HORIZONTAL);
+        rootPanel.setLayout(new BoxLayout(rootPanel, BoxLayout.PAGE_AXIS));
+        rootPanel.add(clazzSelectPanel);
+        rootPanel.add(inputsPanel);
+        rootPanel.add(resultPane);
     }
 
     /**
      * Helper class to layout components at ease
      */
-    private static class LayoutBuilder {
+    private static class GridBagBuilder {
         private final JPanel panel;
         private final GridBagConstraints constraints;
 
-        private LayoutBuilder(JPanel panel) {
+        private GridBagBuilder(JPanel panel) {
             this.panel = panel;
             constraints = new GridBagConstraints();
             constraints.insets = JBUI.insets(UIUtil.DEFAULT_VGAP / 2, UIUtil.DEFAULT_HGAP / 2);
         }
 
-        private LayoutBuilder add(int x, int y, JComponent component) {
-            return add(x, y, component, GridBagConstraints.NONE);
+        private GridBagBuilder add(int x, int y, JComponent component) {
+            return add(x, y, component, GridBagConstraints.CENTER);
         }
 
-        private LayoutBuilder add(int x, int y, JComponent component, int fill) {
+        private GridBagBuilder add(int x, int y, JComponent component, int anchor) {
             constraints.gridx = x;
             constraints.gridy = y;
-            constraints.fill = fill;
+            constraints.anchor = anchor;
             panel.add(component, constraints);
             return this;
         }

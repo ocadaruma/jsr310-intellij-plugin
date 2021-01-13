@@ -13,12 +13,12 @@
     ]]></description>
 
     <change-notes><![CDATA[
-    See https://github.com/ocadaruma/jsr310-intellij-plugin/releases
+    Please visit <a href="https://github.com/ocadaruma/jsr310-intellij-plugin/releases">GitHub Releases</a>
     ]]>
     </change-notes>
 
-    <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-         on how to target different products -->
+    <idea-version since-build="201" until-build="211.*"/>
+
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.java</depends>
     <depends>org.intellij.intelliLang</depends>

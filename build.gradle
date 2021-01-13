@@ -28,6 +28,7 @@ dependencies {
 intellij {
     version "2020.1"
     plugins = ["com.intellij.java", "org.intellij.intelliLang"]
+    updateSinceUntilBuild = false
 }
 
 patchPluginXml {
