@@ -13,6 +13,9 @@ buildscript {
 apply plugin: "java"
 apply plugin: "org.jetbrains.intellij"
 
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
 group = "com.mayreh.intellij.plugins"
 version = "${version}" + (snapshot.toBoolean() ? "-SNAPSHOT" : "")
 
