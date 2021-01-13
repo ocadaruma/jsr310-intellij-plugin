@@ -33,6 +33,6 @@
     </extensions>
 
     <extensions defaultExtensionNs="org.intellij.intelliLang">
-        <injectionConfig config="META-INF/jsr310Injection.xml" />
+        <injectionConfig config="jsr310Injection.xml" />
     </extensions>
 </idea-plugin>
