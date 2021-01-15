@@ -17,7 +17,7 @@
     ]]>
     </change-notes>
 
-    <idea-version since-build="201" until-build="211.*"/>
+    <idea-version since-build="201.6668.113" until-build="211.*"/>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.java</depends>
