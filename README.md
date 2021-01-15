@@ -2,6 +2,8 @@
 
 Plugin that adds supports for JSR-310 (Java Date and Time API).
 
+You can get it from [Marketplace](https://plugins.jetbrains.com/plugin/15832-jsr-310-support) or IDE's plugin manager.
+
 ## Features
 
 - Validate `DateTimeFormatter.ofPattern`
